@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DayList from "./DayList";
 import Appointment from "./Appointments";
-import { getAppointmentsForDay } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview } from "helpers/selectors";
 import "components/Application.scss";
 
 export default function Application(props) {
@@ -10,6 +10,7 @@ export default function Application(props) {
     day: "Monday",
     days: [],
     appointments: {},
+    interviewers: {},
   });
 
   const setDay = (day) => setState({ ...state, day });
@@ -18,19 +19,30 @@ export default function Application(props) {
     Promise.all([
       axios.get("http://localhost:8000/api/days"),
       axios.get("http://localhost:8000/api/appointments"),
+      axios.get("http://localhost:8000/api/interviewers"),
     ]).then((all) => {
       setState((prev) => ({
         ...prev,
         days: all[0].data,
         appointments: Object.values(all[1].data),
+        interviewers: Object.values(all[2].data),
       }));
     });
   }, []);
 
+  console.log(state.interviewers);
   const dailyAppointments = getAppointmentsForDay(state, state.day);
 
   const appointmentsArray = dailyAppointments.map((appointment) => {
-    return <Appointment key={appointment.id} {...appointment} />;
+    const interview = getInterview(state, appointment.interview);
+    return (
+      <Appointment
+        key={appointment.id}
+        id={appointment.id}
+        time={appointment.time}
+        interview={interview}
+      />
+    );
   });
   appointmentsArray.push(<Appointment key="last" time="5pm" />);
 
