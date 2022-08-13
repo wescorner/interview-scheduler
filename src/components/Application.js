@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DayList from "./DayList";
 import Appointment from "./Appointments";
-import { getAppointmentsForDay, getInterview } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
 import "components/Application.scss";
 
 export default function Application(props) {
@@ -25,13 +25,13 @@ export default function Application(props) {
         ...prev,
         days: all[0].data,
         appointments: Object.values(all[1].data),
-        interviewers: Object.values(all[2].data),
+        interviewers: all[2].data,
       }));
     });
   }, []);
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
-
+  const interviewers = getInterviewersForDay(state, state.day);
   const appointmentsArray = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
     return (
@@ -40,6 +40,7 @@ export default function Application(props) {
         id={appointment.id}
         time={appointment.time}
         interview={interview}
+        interviewers={interviewers}
       />
     );
   });
