@@ -30,7 +30,6 @@ export default function Application(props) {
     });
   }, []);
 
-  console.log(state.interviewers);
   const dailyAppointments = getAppointmentsForDay(state, state.day);
 
   const appointmentsArray = dailyAppointments.map((appointment) => {

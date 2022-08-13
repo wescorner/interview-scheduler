@@ -5,6 +5,7 @@ export default function useVisualMode(initialMode) {
   const [history, setHistory] = useState([initialMode]);
 
   const transition = function (mode, replace = false) {
+    console.log(`ran transition(${mode}, ${replace})`);
     if (replace) {
       setMode(mode);
       setHistory([...history.slice(0, -1), mode]);
