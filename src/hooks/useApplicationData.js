@@ -3,15 +3,7 @@ import axios from "axios";
 import reducer, { SET_DAY, SET_APPLICATION_DATA, SET_INTERVIEW } from "reducers/application";
 
 export default function useApplicationData() {
-  //*old useState
-  // const [state, setState] = useState({
-  //   day: "Monday",
-  //   days: [],
-  //   appointments: {},
-  //   interviewers: {},
-  // });
-
-  //*new useReducer
+  //useReducer hook
   const [state, dispatch] = useReducer(reducer, {
     day: "Monday",
     days: [],
@@ -19,23 +11,7 @@ export default function useApplicationData() {
     interviewers: {},
   });
 
-  //*old state version
-  // useEffect(() => {
-  //   Promise.all([
-  //     axios.get("/api/days"),
-  //     axios.get("/api/appointments"),
-  //     axios.get("/api/interviewers"),
-  //   ]).then((all) => {
-  //     setState((prev) => ({
-  //       ...prev,
-  //       days: all[0].data,
-  //       appointments: all[1].data,
-  //       interviewers: all[2].data,
-  //     }));
-  //   });
-  // }, []);
-
-  //*new reducer version
+  //set application data
   useEffect(() => {
     Promise.all([
       axios.get("/api/days"),
@@ -53,16 +29,14 @@ export default function useApplicationData() {
     });
   }, []);
 
-  //*old state version
-  // const setDay = (day) => setState({ ...state, day });
-
-  //*new reducer version
+  //set the day
   const setDay = (day) =>
     dispatch({
       type: SET_DAY,
       value: { day },
     });
 
+  //update the spots remaining dynamically
   const updateSpots = function (state, appointments) {
     let spots = 0;
     const dayObj = state.days.find((day) => day.name === state.day);
@@ -80,24 +54,7 @@ export default function useApplicationData() {
     return newDays;
   };
 
-  //*old state version
-  // const bookInterview = function (id, interview) {
-  //   const appointment = {
-  //     ...state.appointments[id],
-  //     interview: { ...interview },
-  //   };
-  //   const appointments = {
-  //     ...state.appointments,
-  //     [id]: appointment,
-  //   };
-
-  //   return axios.put(`http://localhost:8000/api/appointments/${id}`, { interview }).then(() => {
-  //     const days = updateSpots(state, appointments);
-  //     setState({ ...state, appointments, days });
-  //   });
-  // };
-
-  //*new reducer version
+  //create a new interview appointment
   const bookInterview = function (id, interview) {
     const appointment = {
       ...state.appointments[id],
@@ -114,23 +71,7 @@ export default function useApplicationData() {
     });
   };
 
-  //*old state version
-  // const cancelInterview = function (id) {
-  //   const appointment = {
-  //     ...state.appointments[id],
-  //     interview: null,
-  //   };
-  //   const appointments = {
-  //     ...state.appointments,
-  //     [id]: appointment,
-  //   };
-  //   return axios.delete(`http://localhost:8000/api/appointments/${id}`).then(() => {
-  //     const days = updateSpots(state, appointments);
-  //     setState({ ...state, appointments, days });
-  //   });
-  // };
-
-  //*new reducer version
+  //delete an interview appointment
   const cancelInterview = function (id) {
     const appointment = {
       ...state.appointments[id],

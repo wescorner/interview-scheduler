@@ -6,11 +6,14 @@ import "components/Application.scss";
 import useApplicationData from "hooks/useApplicationData";
 
 export default function Application(props) {
+  //destructure object from custom hook
   const { state, setDay, bookInterview, cancelInterview } = useApplicationData();
 
+  //get appointments and interviewers for each day
   const dailyAppointments = getAppointmentsForDay(state, state.day);
   const interviewers = getInterviewersForDay(state, state.day);
 
+  //create array of appointments
   const appointmentsArray = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
     return (
