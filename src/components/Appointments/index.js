@@ -22,6 +22,17 @@ export default function Appointment(props) {
 
   const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
 
+  //make sure we aren't transitioning to SHOW with null interview
+  useEffect(() => {
+    if (props.interview && mode === EMPTY) {
+      transition(SHOW);
+    }
+    if ((props.interview === undefined || props.interview === null) && mode === SHOW) {
+      transition(EMPTY);
+    }
+  }, [props.interview, transition, mode]);
+
+  //saving an interview
   const save = function (name, interviewer) {
     transition(SAVING);
     const interview = {
@@ -34,6 +45,7 @@ export default function Appointment(props) {
       .catch((err) => transition(ERROR_SAVE, true));
   };
 
+  //deleting an interview
   const del = function () {
     transition(DELETING, true);
     props
@@ -41,15 +53,6 @@ export default function Appointment(props) {
       .then(() => transition(EMPTY))
       .catch((err) => transition(ERROR_DELETE, true));
   };
-
-  useEffect(() => {
-    if (props.interview && mode === EMPTY) {
-      transition(SHOW);
-    }
-    if (props.interview === null && mode === SHOW) {
-      transition(EMPTY);
-    }
-  }, [props.interview, transition, mode]);
 
   return (
     <article className="appointment" data-testid="appointment">

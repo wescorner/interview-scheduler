@@ -13,9 +13,6 @@ export default function useApplicationData() {
 
   //create websocket and set application data
   useEffect(() => {
-    // const url = process.env.REACT_APP_WEBSOCKET_URL;
-    // const webSocket = new WebSocket(url);
-
     Promise.all([
       axios.get("/api/days"),
       axios.get("/api/appointments"),
@@ -29,23 +26,6 @@ export default function useApplicationData() {
           interviewers: all[2].data,
         },
       });
-
-      // webSocket.onmessage = (event) => {
-      //   console.log("message received:", event.data);
-      //   const data = JSON.parse(event.data);
-      //   if (data.type === SET_INTERVIEW) {
-      //     const appointment = {
-      //       ...state.appointments[data.id],
-      //       interview: { ...data.interview },
-      //     };
-      //     const appointments = {
-      //       ...state.appointments,
-      //       [data.id]: appointment,
-      //     };
-
-      //     dispatch({ type: SET_INTERVIEW, value: { appointments } });
-      //   }
-      // };
     });
   }, []);
 
