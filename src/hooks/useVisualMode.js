@@ -4,6 +4,7 @@ export default function useVisualMode(initialMode) {
   const [mode, setMode] = useState(initialMode);
   const [history, setHistory] = useState([initialMode]);
 
+  //transition to the given mode
   const transition = function (mode, replace = false) {
     if (replace) {
       setMode(mode);
@@ -14,6 +15,7 @@ export default function useVisualMode(initialMode) {
     }
   };
 
+  //transition to the last mode in the history stack
   const back = function () {
     if (history.length <= 1) return;
     setMode(history[history.length - 2]);
